@@ -1,38 +1,15 @@
 import { Observable } from "rxjs";
+import { share } from "rxjs/operators";
 
-const observable1 = Observable.create((observer: any) => {
-  observer.next("Observable one is alive");
-  let count = 0;
-  setInterval(() => {
-    observer.next(`Observable ${count}`);
-    ++count;
-  }, 5000);
-});
-
-const observable2 = Observable.create((observer: any) => {
-  observer.next("Observable two is alive");
-  let count = 0;
-  setInterval(() => {
-    observer.next(`Observable ${count}`);
-    ++count;
-  }, 2500);
-});
-
-const subscription1 = observable1.subscribe((x: any) => logItem(x, 1));
-const subscription2 = observable2.subscribe((x: any) => logItem(x, 2));
-
-document.getElementById("unbtn1").addEventListener("click", () => {
-  subscription1.unsubscribe();
-});
-document.getElementById("unbtn2").addEventListener("click", () => {
-  subscription2.unsubscribe();
-});
+var observable1 = Observable.create((observer: any) => {
+  observer.next("Observable One is alive!" + Date.now());
+}).pipe(share());
 
 document.getElementById("adbtn1").addEventListener("click", () => {
-  subscription1.subscribe();
+  const subscription1 = observable1.subscribe((x: any) => logItem(x, 1));
 });
 document.getElementById("adbtn2").addEventListener("click", () => {
-  subscription2.add(subscription1);
+  const subscription2 = observable1.subscribe((x: any) => logItem(x, 2));
 });
 
 function logItem(val: any, column: any) {
